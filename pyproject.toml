@@ -1,0 +1,22 @@
+[project]
+name = "agentic-rag"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiohttp",
+    "exa-py",
+    "fastapi[standard]",
+    "httpx",
+    "jinja2",
+    "llama-index-agent-openai",
+    "llama-index-core",
+    "llama-index-llms-cerebras",
+    "pytest",
+    "python-dotenv",
+    "python-multipart",
+    "requests",
+    "uvicorn",
+    "websockets",
+]
