@@ -11,7 +11,7 @@ from tools.exa_tools import ExaSearchTools, create_search_tool,create_content_to
 from tools.analysis_tools import AnalysisTools,create_summarize_tool,create_compare_tool,create_insights_tool
 from agents.research_agent import create_research_agent
 from agents.analysis_agent import create_analysis_agent
-from research_workflows.research_workflow import ResearchWorkflow
+from research_workflows.research_workflows import ResearchWorkflow
 from .models import StreamChunk
 
 class ResearchService:

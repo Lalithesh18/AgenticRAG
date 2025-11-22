@@ -9,6 +9,15 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from dotenv import load_dotenv
 
+from .models import (
+    ResearchQuery,
+    ResearchResponse,
+    ErrorResponse,
+    HealthResponse,
+    StreamChunk,
+    Source
+)
+
 from .research_service import ResearchService
 
 load_dotenv()
@@ -150,5 +159,51 @@ async def websocket_endpoint(websocket: WebSocket):
             "timestamp": time.time()
         })
 
-    async for chunk in research_service.execute_query_streaming   
+        async for chunk in research_service.execute_query_streaming(query,num_results):
+              await websocket.send_json({
+                    "type":chunk.type,
+                    "content":chunk.content,
+                    "metadata":chunk.metadata,
+                   "timestamp": chunk.timestamp.isoformat()
+                })
+              
+        await websocket.send_json({
+                    "type":"complete",
+                    "content":"Research complete",
+                    "timestamp":time.time
+              })
+    
+    except WebSocketDisconnect:
+        print("Client disconnected")
+    except Exception as e:
+        await websocket.close()
+        
+@app.exception_handler(Exception)
+async def general_exception_handler(request,exception):
+    return JSONResponse(
+        status_code=500,
+        content=ErrorResponse(
+            error="Internl Server Error",
+            detail=str[exception]
+        ).model_dump()
+    )
+        
+if __name__=="__main__":
+    import uvicorn 
+
+    uvicorn.run(
+        "api.app:app",
+        host="0.0.0.0", #127.0.0.1
+        port=8000,
+        reload=True, #reload when there is any changes in the file
+        log_levels="info"
+    )
+         
+
+            
+            
+            
+            
+              
+
         
